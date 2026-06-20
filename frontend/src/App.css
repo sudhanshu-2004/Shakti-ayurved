@@ -1,0 +1,245 @@
+
+/* Shakti Ayurved - Custom Styles */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Cinzel:wght@600;700&display=swap');
+
+/* Site Title Styles */
+.site-title {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    line-height: 1;
+}
+.site-title .shakti {
+    font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+    font-weight: 900;
+    color: #123a28; /* premium dark green */
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-size: 1.05em;
+    -webkit-font-smoothing: antialiased;
+}
+.site-title .ayurved {
+    font-family: 'Cinzel', 'Cormorant Garamond', serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.98em;
+    background: linear-gradient(90deg, #D4AF37 0%, #F5E09C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.06);
+}
+
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+}
+
+.hero-bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Navigation active state */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #D4AF37;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Product Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Review Cards */
+.review-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.review-card:hover {
+    box-shadow: 0 8px 30px rgba(26, 77, 46, 0.1);
+}
+
+/* Why Choose Us Cards */
+.feature-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1A4D2E 0%, #2D6B45 100%);
+    color: white;
+    margin-bottom: 1rem;
+}
+
+/* Consultation Form */
+.consultation-form {
+    background: linear-gradient(135deg, #1A4D2E 0%, #0F2F1C 100%);
+    border-radius: 1.5rem;
+    padding: 3rem;
+}
+
+/* Footer */
+.footer-link {
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #D4AF37;
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(26, 77, 46, 0.98);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+/* Mobile Specific Styles */
+@media (max-width: 640px) {
+    .hero-section {
+        min-height: 100svh;
+    }
+    
+    .hero-bg-image {
+        object-position: 60% center;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .review-card {
+        padding: 1.25rem;
+    }
+    
+    .consultation-form {
+        padding: 1.5rem;
+        border-radius: 1rem;
+    }
+    
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* Transformation Stats */
+.stat-card {
+    text-align: center;
+    padding: 2rem;
+}
+
+.stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #D4AF37;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+/* Benefits List */
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.benefit-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #D4AF37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Price Tag */
+.price-tag {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1A4D2E;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 3px solid #fff;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
