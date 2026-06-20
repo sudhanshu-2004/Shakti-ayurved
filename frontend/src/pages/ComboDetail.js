@@ -17,7 +17,7 @@ export default function ComboDetail() {
   useEffect(() => {
     supabase.from('combos').select('*').eq('slug', slug).eq('is_active', true).maybeSingle()
       .then(({ data }) => { if (!data) navigate('/combos'); else setCombo(data); setLoading(false); });
-  }, [slug]);
+  }, [slug, navigate]);
 
   if (loading) return <div className="min-h-screen bg-[#F9F7F2] flex items-center justify-center"><div className="w-8 h-8 border-2 border-[#1A4D2E] border-t-transparent rounded-full animate-spin" /></div>;
   if (!combo) return null;

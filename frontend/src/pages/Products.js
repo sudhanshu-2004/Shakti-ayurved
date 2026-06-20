@@ -74,6 +74,7 @@ export default function Products() {
 
   useEffect(() => {
     loadProducts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory, sortBy]);
 
   useEffect(() => {
