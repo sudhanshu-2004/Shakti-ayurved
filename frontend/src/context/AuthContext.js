@@ -9,9 +9,17 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Guard: if supabase is null (missing/invalid keys), skip auth and continue
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) fetchProfile(session.user.id);
+      setLoading(false);
+    }).catch(() => {
       setLoading(false);
     });
 
@@ -30,6 +38,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const fetchProfile = async (userId) => {
+    if (!supabase) return;
     const { data } = await supabase
       .from('profiles')
       .select('*')
@@ -39,6 +48,7 @@ export function AuthProvider({ children }) {
   };
 
   const signUp = async ({ email, password, fullName, phone }) => {
+    if (!supabase) throw new Error('Auth service not available');
     const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) throw error;
     if (data.user) {
@@ -53,17 +63,19 @@ export function AuthProvider({ children }) {
   };
 
   const signIn = async ({ email, password }) => {
+    if (!supabase) throw new Error('Auth service not available');
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
     return data;
   };
 
   const signOut = async () => {
+    if (!supabase) return;
     await supabase.auth.signOut();
   };
 
   const updateProfile = async (updates) => {
-    if (!user) return;
+    if (!user || !supabase) return;
     const { error } = await supabase
       .from('profiles')
       .update({ ...updates, updated_at: new Date().toISOString() })
