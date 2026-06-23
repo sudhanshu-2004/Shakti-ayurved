@@ -40,6 +40,7 @@ export default function Checkout() {
 
     setLoading(true);
     try {
+      if (!supabase) { toast.error('Order service unavailable. Please try again later.'); setLoading(false); return; }
       const shippingAddress = {
         full_name: form.fullName,
         phone: form.phone,

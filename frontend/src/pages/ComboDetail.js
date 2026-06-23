@@ -15,6 +15,7 @@ export default function ComboDetail() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!supabase) { navigate('/combos'); return; }
     supabase.from('combos').select('*').eq('slug', slug).eq('is_active', true).maybeSingle()
       .then(({ data }) => { if (!data) navigate('/combos'); else setCombo(data); setLoading(false); });
   }, [slug, navigate]);
@@ -59,7 +60,6 @@ export default function ComboDetail() {
                 <Tag size={10} /> COMBO PACK
               </span>
               {combo.is_featured && <span className="bg-[#1A4D2E]/10 text-[#1A4D2E] text-xs font-semibold px-3 py-1 rounded-full">BESTSELLER</span>}
-              }
             </div>
 
             <h1 className="text-2xl md:text-3xl font-bold text-[#1A4D2E] mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>

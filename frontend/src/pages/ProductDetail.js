@@ -26,6 +26,7 @@ export default function ProductDetail() {
   const loadProduct = async () => {
     setLoading(true);
     try {
+      if (!supabase) { navigate('/products'); return; }
       const { data, error } = await supabase
         .from('products')
         .select('*, categories(name, slug)')
@@ -55,6 +56,7 @@ export default function ProductDetail() {
 
   const handleWishlist = async () => {
     if (!user) { toast.error('Please login first'); return; }
+    if (!supabase) { toast.error('Service unavailable'); return; }
     const { error } = await supabase.from('wishlists').insert({ product_id: product.id });
     if (error?.code === '23505') toast.info('Already in wishlist');
     else if (error) toast.error('Failed');
