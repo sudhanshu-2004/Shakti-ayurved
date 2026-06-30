@@ -1,9 +1,10 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, BackgroundTasks
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
+import requests as http_requests
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional
@@ -18,6 +19,30 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# CRM webhook config (fires lead creation in CRM as a safety fallback)
+# The primary integration is via Supabase triggers (002_website_integration.sql)
+CRM_WEBHOOK_URL    = os.environ.get('CRM_WEBHOOK_URL', 'http://localhost:5000/api/webhook')
+CRM_WEBHOOK_SECRET = os.environ.get('WEBHOOK_SECRET', '')
+
+
+def fire_crm_webhook(path: str, payload: dict):
+    """Fire-and-forget HTTP POST to CRM webhook. Runs synchronously in a
+    background thread — never blocks the main response."""
+    if not CRM_WEBHOOK_SECRET or CRM_WEBHOOK_SECRET == 'change_this_webhook_secret':
+        logger.debug('[crm-webhook] WEBHOOK_SECRET not set — skipping webhook call')
+        return
+    try:
+        resp = http_requests.post(
+            f'{CRM_WEBHOOK_URL}/{path}',
+            json=payload,
+            headers={'X-Webhook-Secret': CRM_WEBHOOK_SECRET},
+            timeout=5,
+        )
+        logger.info(f'[crm-webhook] POST /{path} → {resp.status_code}')
+    except Exception as exc:
+        # Never let the fallback webhook crash the website API
+        logger.warning(f'[crm-webhook] Failed to reach CRM webhook: {exc}')
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -84,7 +109,7 @@ async def get_status_checks():
 
 # Consultation endpoints
 @api_router.post("/consultation", response_model=ConsultationResponse)
-async def create_consultation(input: ConsultationCreate):
+async def create_consultation(input: ConsultationCreate, background_tasks: BackgroundTasks):
     """Create a new consultation request"""
     consultation_id = str(uuid.uuid4())
     created_at = datetime.now(timezone.utc).isoformat()
@@ -98,6 +123,14 @@ async def create_consultation(input: ConsultationCreate):
     }
     
     await db.consultations.insert_one(doc)
+
+    # Fallback: notify CRM backend to create a lead
+    # (Primary bridge is the Supabase trigger in 002_website_integration.sql)
+    background_tasks.add_task(
+        fire_crm_webhook,
+        'consultation',
+        {'name': input.name, 'phone': input.phone},
+    )
     
     return ConsultationResponse(
         id=consultation_id,

@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "crm-api/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "crm-frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/crm-api/(.*)",
+      "dest": "/crm-api/index.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/crm/(.*)",
+      "dest": "/crm-frontend/$1"
+    },
+    {
+      "src": "/crm",
+      "dest": "/crm-frontend/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "REACT_APP_SUPABASE_URL": "https://ksjgsvtrfbhlgrvxrahu.supabase.co",
+    "REACT_APP_SUPABASE_ANON_KEY": "@supabase_anon_key"
+  }
+}

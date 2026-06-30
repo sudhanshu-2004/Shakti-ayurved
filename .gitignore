@@ -4,9 +4,9 @@
 .idea/
 .vscode/
 
-# Dependencies
+# Dependencies — all node_modules across all sub-packages
 node_modules/
-/node_modules
+**/node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -27,10 +27,15 @@ next-env.d.ts
 
 # Production builds
 /build
+/frontend/build
 dist/
-dist
 
-# Environment files (comprehensive coverage)
+# ── Environment files ─────────────────────────────────────────
+# Keep .env.example files (they have no secrets)
+*.env
+.env
+**/.env
+!**/.env.example
 
 *token.json*
 *credentials.json*
@@ -41,6 +46,8 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 dump.rdb
+start.log
+**/logs/*.log
 
 # System files
 .DS_Store
@@ -48,6 +55,7 @@ dump.rdb
 
 # Python
 __pycache__/
+**/__pycache__/
 *pyc*
 venv/
 .venv/
@@ -58,8 +66,9 @@ chainlit.md
 .ipynb_checkpoints/
 .ac
 
-# Deployment
+# Deployment artifacts
 .vercel
+**/.vercel
 
 # Data and databases
 agenthub/agents/youtube/db
@@ -72,13 +81,14 @@ agenthub/agents/youtube/db
 *.pack
 *.deb
 *.dylib
+build.rar
 
 # Build caches
 .cache/
 
 # Mobile development
-android-sdk/ -e 
-# Environment files
-*.env
-*.env.*
-.env
+android-sdk/
+
+# Uploads folder (runtime-generated)
+crm-api/uploads/*
+!crm-api/uploads/.gitkeep
