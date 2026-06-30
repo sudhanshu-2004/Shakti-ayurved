@@ -42,9 +42,5 @@
       "src": "/(.*)",
       "dest": "/frontend/$1"
     }
-  ],
-  "env": {
-    "REACT_APP_SUPABASE_URL": "https://ksjgsvtrfbhlgrvxrahu.supabase.co",
-    "REACT_APP_SUPABASE_ANON_KEY": "@supabase_anon_key"
-  }
+  ]
 }
