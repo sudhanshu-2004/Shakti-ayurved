@@ -1,46 +1,25 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "build"
-      }
+      "source": "/crm-api/(.*)",
+      "destination": "/crm-api/api/index.js"
     },
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "crm-api/index.js",
-      "use": "@vercel/node"
+      "source": "/crm/(.*)",
+      "destination": "/crm-frontend/$1"
     },
     {
-      "src": "crm-frontend/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/crm-api/(.*)",
-      "dest": "/crm-api/index.js"
+      "source": "/crm",
+      "destination": "/crm-frontend/index.html"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "/api/index.py"
-    },
-    {
-      "src": "/crm/(.*)",
-      "dest": "/crm-frontend/$1"
-    },
-    {
-      "src": "/crm",
-      "dest": "/crm-frontend/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "source": "/(.*)",
+      "destination": "/frontend/build/$1"
     }
   ]
 }
